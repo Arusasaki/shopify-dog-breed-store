@@ -30,3 +30,19 @@ Shopifyで複数の犬種専門店を「1つの管理画面」で運営するた
 - GitHub CLI (gh) をインストール・認証済み
 - 最終更新: 2026-01-29
 
+
+## 2026-01-29 更新
+
+### ブログ記事テーブル修正
+- [x] ジャックラッセルテリア記事のテーブル修正HTMLを作成
+- [ ] Shopify管理画面で記事内容を更新（手動作業必要）
+
+### 作成ファイル
+- `blog_articles/jack-russell-care-guide.html` - 修正済みHTML
+- `blog_articles/SHOPIFY_UPDATE_GUIDE.md` - 更新手順書
+
+### 問題詳細
+- 4つのテーブルがマークダウン記法のまま表示
+- NOTE/WARNING等のcalloutが未変換
+- Shopifyはマークダウンテーブルを直接レンダリングしない
+
