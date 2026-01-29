@@ -1,0 +1,170 @@
+{% schema %}
+{
+  "name": "Breed Selector Grid",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Choose Your Breed"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Breed Menu",
+      "info": "Select a menu that contains links to your Breed Collections."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Breed Selector Grid"
+    }
+  ]
+}
+{% endschema %}
+
+<div class="page-width section-breed-selector">
+  {% if section.settings.heading != blank %}
+    <h2 class="h1 center">{{ section.settings.heading }}</h2>
+  {% endif %}
+
+  <div class="breed-grid">
+    {% for link in linklists[section.settings.menu].links %}
+      {% if link.type == 'collection_link' %}
+        {% assign collection = link.object %}
+        
+        {%- liquid
+          assign breed_logo = collection.metafields.custom.brand_logo
+          assign breed_color = collection.metafields.custom.brand_color | default: '#d4a06d'
+          assign card_image = collection.image | default: collection.products.first.featured_image
+        -%}
+
+        <a href="{{ link.url }}" class="breed-card" style="--breed-color: {{ breed_color }};">
+          <div class="breed-card__image-wrapper">
+            {% if breed_logo != blank %}
+              {{ breed_logo | image_url: width: 400 | image_tag: class: 'breed-logo', loading: 'lazy' }}
+            {% elsif card_image != blank %}
+              {{ card_image | image_url: width: 600 | image_tag: class: 'breed-image', loading: 'lazy' }}
+            {% else %}
+              {{ 'dog' | placeholder_svg_tag: 'placeholder-svg' }}
+            {% endif %}
+          </div>
+          
+          <div class="breed-card__content">
+            <h3 class="h3">{{ link.title }}</h3>
+            <span class="breed-card__arrow">→</span>
+          </div>
+        </a>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+
+<style>
+  .section-breed-selector {
+    padding-top: 60px;
+    padding-bottom: 60px;
+  }
+
+  .breed-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+  }
+
+  .breed-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    background: white;
+    border-radius: var(--radius-lg, 24px);
+    overflow: hidden;
+    position: relative;
+    border: 2px solid transparent;
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: var(--shadow-soft, 0 10px 30px rgba(0,0,0,0.05));
+  }
+
+  .breed-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-hover, 0 15px 40px rgba(0,0,0,0.1));
+    border-color: var(--breed-color);
+  }
+
+  .breed-card__image-wrapper {
+    width: 100%;
+    height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.9) 100%);
+    padding: 20px;
+    position: relative;
+  }
+  
+  /* Tint background on hover */
+  .breed-card__image-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: var(--breed-color);
+    opacity: 0.1;
+  }
+
+  .breed-logo {
+    max-width: 80%;
+    max-height: 80%;
+    object-fit: contain;
+    transition: transform 0.4s ease;
+  }
+
+  .breed-card:hover .breed-logo {
+    transform: scale(1.1) rotate(-3deg);
+  }
+
+  .breed-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .breed-card__content {
+    padding: 20px;
+    width: 100%;
+    text-align: center;
+    border-top: 1px solid rgba(0,0,0,0.05);
+    background: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .breed-card h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: var(--wanko-text-dark, #333);
+    font-weight: 700;
+  }
+
+  .breed-card__arrow {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--breed-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: all 0.3s ease;
+  }
+
+  .breed-card:hover .breed-card__arrow {
+    opacity: 1;
+    transform: translateX(0);
+  }
+</style>

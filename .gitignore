@@ -1,0 +1,6 @@
+.vercel
+.DS_Store
+*.metadata.json
+*.resolved
+*.resolved.*
+.system_generated/

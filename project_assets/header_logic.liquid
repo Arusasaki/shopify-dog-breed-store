@@ -1,0 +1,53 @@
+{%- comment -%}
+  ----------------------------------------------------------------------------------
+  【ここからコピー】
+  以下のコードブロックを、元の「{%- if settings.logo != blank -%} ... {%- endif -%}」の代わりに貼り付けてください。
+  ----------------------------------------------------------------------------------
+{%- endcomment -%}
+
+{%- liquid
+  # 1. デフォルトのロゴと設定を取得
+  assign current_logo = settings.logo
+  assign logo_width = settings.logo_width
+
+  # 2. コレクションページなら、その犬種のロゴがないかチェック
+  if request.page_type == 'collection' and collection.metafields.custom.brand_logo != blank
+    assign current_logo = collection.metafields.custom.brand_logo
+  
+  # 3. 商品ページなら、その商品が属する犬種コレクションのロゴを探す
+  elsif request.page_type == 'product'
+    for col in product.collections
+      if col.metafields.custom.brand_logo != blank
+        assign current_logo = col.metafields.custom.brand_logo
+        break
+      endif
+    endfor
+  endif
+-%}
+
+{%- if current_logo != blank -%}
+  <div class="header__heading-logo-wrapper">
+    {%- assign logo_alt = current_logo.alt | default: shop.name | escape -%}
+    {%- assign logo_height = logo_width | divided_by: current_logo.aspect_ratio -%}
+    {% capture sizes %}(max-width: {{ logo_width | times: 2 }}px) 50vw, {{ logo_width }}px{% endcapture %}
+    {% capture widths %}{{ logo_width }}, {{ logo_width | times: 1.5 | round }}, {{ logo_width | times: 2 }}{% endcapture %}
+    
+    {{ current_logo | image_url: width: 600 | image_tag:
+      class: 'header__heading-logo motion-reduce',
+      widths: widths,
+      height: logo_height,
+      width: logo_width,
+      alt: logo_alt,
+      sizes: sizes,
+      preload: true
+    }}
+  </div>
+{%- else -%}
+  <span class="h2">{{ shop.name }}</span>
+{%- endif -%}
+
+{%- comment -%}
+  ----------------------------------------------------------------------------------
+  【ここまでコピー】
+  ----------------------------------------------------------------------------------
+{%- endcomment -%}

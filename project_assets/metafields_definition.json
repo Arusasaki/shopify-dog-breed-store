@@ -1,0 +1,32 @@
+{
+  "instructions": "In Shopify Admin, go to Settings > Custom data > Collections. Add the following definitions.",
+  "definitions": [
+    {
+      "name": "Brand Logo",
+      "namespace": "custom",
+      "key": "brand_logo",
+      "description": "The specific logo for this breed's shop view.",
+      "type": "file_reference",
+      "validations": {
+        "allowed_file_types": ["image"]
+      }
+    },
+    {
+      "name": "Brand Color Primary",
+      "namespace": "custom",
+      "key": "brand_color",
+      "description": "Main color for buttons and accents for this breed (Hex code).",
+      "type": "color"
+    },
+    {
+      "name": "Hero Banner",
+      "namespace": "custom",
+      "key": "hero_banner",
+      "description": "Top banner image for this breed's collection page.",
+      "type": "file_reference",
+      "validations": {
+        "allowed_file_types": ["image"]
+      }
+    }
+  ]
+}
